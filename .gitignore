@@ -2,7 +2,7 @@
 /geckodriver.log
 /__pycache__
 rs19_val/
-
+models/
 .env
 .venv
 env/
