@@ -1,8 +1,6 @@
 /.vscode
 /geckodriver.log
 /__pycache__
-
-models/
 rs19_val/
 
 .env
