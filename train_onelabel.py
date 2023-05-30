@@ -56,7 +56,6 @@ def train(model, num_epochs, optimizer, criterion):
                 optimizer.zero_grad()
 
                 outputs = model(inputs)
-                
                 loss = criterion(outputs['out'].squeeze(), masks.float()) #outputs['out'], masks
 
                 if phase == 'Train':
@@ -71,7 +70,7 @@ def train(model, num_epochs, optimizer, criterion):
             # save the better model
             if phase == 'Test' and epoch_loss < best_loss:
                 best_loss = epoch_loss
-            best_model = copy.deepcopy(model.state_dict())
+                best_model = copy.deepcopy(model.state_dict())
 
         print('Epoch {} done with loss: {:4f}'.format(epoch, epoch_loss))
         
@@ -84,13 +83,13 @@ def train(model, num_epochs, optimizer, criterion):
     
 if __name__ == "__main__":
     model = create_model(1)
-    epochs = 10
+    epochs = 30
     lr = 0.02
 
     loss_function = nn.CrossEntropyLoss()
     #optimizer = Adadelta(model.parameters(), lr = lr)
-    optimizer = SGD(model.parameters(), lr = lr)
-    #optimizer = Adam(model.parameters())
+    #optimizer = SGD(model.parameters(), lr = lr)
+    optimizer = Adam(model.parameters())
     model_trained = train(model, epochs, optimizer, loss_function)
 
     torch.save(model_trained, os.path.join(PATH_MODELS,'model_{}_{}'.format(epochs, lr)))

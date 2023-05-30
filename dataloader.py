@@ -3,6 +3,7 @@ from torchvision.datasets.vision import VisionDataset
 from torchvision.transforms.functional import pil_to_tensor, to_tensor
 from PIL import Image
 import numpy as np
+import torch
 
 class CustomDataset(VisionDataset):
     def __init__(self, image_folder, mask_folder, seed, subset, test_val_fraction):
@@ -40,11 +41,15 @@ class CustomDataset(VisionDataset):
 
         with open(image_path, "rb") as image_file, open(mask_path, "rb") as mask_file:
             image = Image.open(image_file)
-            mask = Image.open(mask_file)
-            mask = mask.convert("L")
+            mask_data = np.load(mask_file)
+            mask = mask_data['arr_0']
+
+            image = image.resize((224, 224), Image.BILINEAR)
+            mask = np.resize(mask, (224, 224))
 
             image = pil_to_tensor(image).float()
-            mask = pil_to_tensor(mask).float()
+            mask = torch.from_numpy(mask).float()
+            mask_norm = torch.squeeze(mask / 254).long()
 
-            sample = [image, mask]
+            sample = [image, mask_norm]
             return sample

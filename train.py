@@ -27,15 +27,13 @@ def train(model, num_epochs, optimizer, criterion):
     best_model = copy.deepcopy(model.state_dict())
     best_loss = 1e10
     loss = 0
-    device = "cpu"
-    #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    #device = "cpu"
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch+1, num_epochs))
         print('-' * 10)
-        
-        cost = 0
 
         # Epoch
         for phase in ['Train', 'Test']:
@@ -45,13 +43,15 @@ def train(model, num_epochs, optimizer, criterion):
                 model.eval()
 
             # Iterate over data
-            dataset = CustomDataset(subset = phase)
+            dataset = CustomDataset(PATH_JPGS, PATH_MASKS, True, subset = phase, test_val_fraction = 0.1)
             dataloader = DataLoader(dataset, batch_size=4, shuffle=False)
             for inputs, masks in tqdm(dataloader):
 
                 # load 1 data sample
-                #inputs, masks = inputs.cuda(), masks.cuda()
-                inputs, masks = inputs.cpu(), masks.cpu()
+                if device.type == 'cuda':
+                    inputs, masks = inputs.cuda(), masks.cuda()
+                else:
+                    inputs, masks = inputs.cpu(), masks.cpu()
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
@@ -62,12 +62,12 @@ def train(model, num_epochs, optimizer, criterion):
                 if phase == 'Train':
                     loss.backward() # gradients
                     optimizer.step() # update parameters
-                    cost += loss
 
             epoch_loss = loss
 
             print('{} Loss: {:.4f}'.format(phase, loss))
-
+            with open(os.path.join(PATH_MODELS, 'log_{}_{}.txt'.format(num_epochs, lr)), 'a') as log_file:
+                log_file.write('Epoch {}: {} Loss: {:.4f}\n'.format(epoch, phase, epoch_loss))
             # save the better model
             if phase == 'Test' and epoch_loss < best_loss:
                 best_loss = epoch_loss
