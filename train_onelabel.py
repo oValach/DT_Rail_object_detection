@@ -33,8 +33,6 @@ def train(model, num_epochs, optimizer, criterion):
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch+1, num_epochs))
         print('-' * 10)
-        
-        cost = 0
 
         # Epoch
         for phase in ['Train', 'Test']:
@@ -59,17 +57,17 @@ def train(model, num_epochs, optimizer, criterion):
 
                 outputs = model(inputs)
                 
-                loss = criterion(outputs['out'].squeeze(), masks.float()) #outputs['out'].squeeze(), masks.float()
+                loss = criterion(outputs['out'].squeeze(), masks.float()) #outputs['out'], masks
 
                 if phase == 'Train':
                     loss.backward() # gradients
                     optimizer.step() # update parameters
-                    cost += loss
 
             epoch_loss = loss
 
-            print('{} Loss: {:.4f}'.format(phase, loss))
-
+            print('{} Loss: {:.4f}'.format(phase, epoch_loss))
+            with open(os.path.join(PATH_MODELS, 'log_{}_{}.txt'.format(num_epochs, lr)), 'a') as log_file:
+                log_file.write('Epoch {}: {} Loss: {:.4f}\n'.format(epoch, phase, epoch_loss))
             # save the better model
             if phase == 'Test' and epoch_loss < best_loss:
                 best_loss = epoch_loss
@@ -86,13 +84,13 @@ def train(model, num_epochs, optimizer, criterion):
     
 if __name__ == "__main__":
     model = create_model(1)
-    epochs = 40
+    epochs = 10
     lr = 0.02
 
     loss_function = nn.CrossEntropyLoss()
     #optimizer = Adadelta(model.parameters(), lr = lr)
-    #optimizer = SGD(model.parameters(), lr = lr)
-    optimizer = Adam(model.parameters())
+    optimizer = SGD(model.parameters(), lr = lr)
+    #optimizer = Adam(model.parameters())
     model_trained = train(model, epochs, optimizer, loss_function)
 
     torch.save(model_trained, os.path.join(PATH_MODELS,'model_{}_{}'.format(epochs, lr)))
