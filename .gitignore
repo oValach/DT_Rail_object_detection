@@ -2,6 +2,8 @@
 /geckodriver.log
 /__pycache__
 
+models/
+
 .env
 .venv
 env/
