@@ -3,6 +3,7 @@
 /__pycache__
 
 models/
+rs19_val/
 
 .env
 .venv
