@@ -8,7 +8,7 @@ from torchvision.transforms.functional import pil_to_tensor
 from PIL import Image
 import matplotlib.pyplot as plt
 
-with open('rs19_val\jpgs\\rs19_val\\rs00091.jpg', "rb") as image_file, open('rs19_val\\uint8\\objects\\91_5.png', "rb") as mask_file:
+with open('rs19_val\jpgs\\rs19_val\\rs00093.jpg', "rb") as image_file, open('rs19_val\\uint8\\objects\\91_5.png', "rb") as mask_file:
     image = Image.open(image_file)
     mask = Image.open(mask_file)
     mask = mask.convert("L")
@@ -22,7 +22,7 @@ with open('rs19_val\jpgs\\rs19_val\\rs00091.jpg', "rb") as image_file, open('rs1
 
     image = image.unsqueeze(0)
 
-    model = torch.load('models\\model_10_0.02')
+    model = torch.load('models\\model_30_0.02_sgd')
     model, image = model.cpu(), image.cpu()
     model.eval()
     output = model(image)

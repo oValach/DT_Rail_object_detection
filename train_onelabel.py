@@ -1,6 +1,6 @@
 from torchvision.models.segmentation.deeplabv3 import DeepLabHead
 from torchvision import models
-from torch.optim import Adadelta, SGD
+from torch.optim import Adadelta, SGD, Adam
 import torch.nn as nn
 import numpy as np
 import os
@@ -47,7 +47,7 @@ def train(model, num_epochs, optimizer, criterion):
             dataset = CustomDataset(subset = phase)
             dataloader = DataLoader(dataset, batch_size=4, shuffle=False)
             for inputs, masks in tqdm(dataloader):
-
+                
                 # load 1 data sample
                 if device.type == 'cuda':
                     inputs, masks = inputs.cuda(), masks.cuda()
@@ -59,7 +59,7 @@ def train(model, num_epochs, optimizer, criterion):
 
                 outputs = model(inputs)
                 
-                loss = criterion(outputs['out'], masks)
+                loss = criterion(outputs['out'].squeeze(), masks.float()) #outputs['out'].squeeze(), masks.float()
 
                 if phase == 'Train':
                     loss.backward() # gradients
@@ -73,7 +73,7 @@ def train(model, num_epochs, optimizer, criterion):
             # save the better model
             if phase == 'Test' and epoch_loss < best_loss:
                 best_loss = epoch_loss
-                best_model = copy.deepcopy(model.state_dict())
+            best_model = copy.deepcopy(model.state_dict())
 
         print('Epoch {} done with loss: {:4f}'.format(epoch, epoch_loss))
         
@@ -85,13 +85,14 @@ def train(model, num_epochs, optimizer, criterion):
     return model
     
 if __name__ == "__main__":
-    model = create_model(2)
-    epochs = 30
+    model = create_model(1)
+    epochs = 40
     lr = 0.02
 
     loss_function = nn.CrossEntropyLoss()
     #optimizer = Adadelta(model.parameters(), lr = lr)
-    optimizer = SGD(model.parameters(), lr = lr)
+    #optimizer = SGD(model.parameters(), lr = lr)
+    optimizer = Adam(model.parameters())
     model_trained = train(model, epochs, optimizer, loss_function)
 
     torch.save(model_trained, os.path.join(PATH_MODELS,'model_{}_{}'.format(epochs, lr)))
