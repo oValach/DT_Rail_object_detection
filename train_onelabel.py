@@ -83,13 +83,13 @@ def train(model, num_epochs, optimizer, criterion):
     
 if __name__ == "__main__":
     model = create_model(1)
-    epochs = 30
-    lr = 0.02
+    epochs = 200
+    lr = 0.001
 
     loss_function = nn.CrossEntropyLoss()
     #optimizer = Adadelta(model.parameters(), lr = lr)
     #optimizer = SGD(model.parameters(), lr = lr)
-    optimizer = Adam(model.parameters())
+    optimizer = Adam(model.parameters(), lr = lr)
     model_trained = train(model, epochs, optimizer, loss_function)
 
     torch.save(model_trained, os.path.join(PATH_MODELS,'model_{}_{}'.format(epochs, lr)))
