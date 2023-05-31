@@ -43,7 +43,7 @@ def train(model, num_epochs, optimizer, criterion):
 
             # Iterate over data
             dataset = CustomDataset(subset = phase)
-            dataloader = DataLoader(dataset, batch_size=4, shuffle=False)
+            dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
             for inputs, masks in tqdm(dataloader):
                 
                 # load 1 data sample
@@ -56,7 +56,7 @@ def train(model, num_epochs, optimizer, criterion):
                 optimizer.zero_grad()
 
                 outputs = model(inputs)
-                loss = criterion(outputs['out'].squeeze(), masks.float()) #outputs['out'], masks
+                loss = criterion(outputs['out'], masks)
 
                 if phase == 'Train':
                     loss.backward() # gradients
@@ -82,15 +82,14 @@ def train(model, num_epochs, optimizer, criterion):
     return model
     
 if __name__ == "__main__":
-    model = create_model(1)
-    epochs = 200
-    lr = 0.001
+    model = create_model(2)
+    epochs = 10
+    lr = 0.01
 
     loss_function = nn.CrossEntropyLoss()
     #optimizer = Adadelta(model.parameters(), lr = lr)
-    #optimizer = SGD(model.parameters(), lr = lr)
-    optimizer = Adam(model.parameters(), lr = lr)
+    optimizer = SGD(model.parameters(), lr = lr)
+    #optimizer = Adam(model.parameters(), lr = lr)
     model_trained = train(model, epochs, optimizer, loss_function)
 
     torch.save(model_trained, os.path.join(PATH_MODELS,'model_{}_{}'.format(epochs, lr)))
-

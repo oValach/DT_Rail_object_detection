@@ -9,16 +9,18 @@ class CustomDataset(VisionDataset):
     def __init__(self, subset):
         self.image_folder = Path('rs19_val\jpgs\\rs19_val\\rs00091.jpg')
         self.mask_folder = Path('rs19_val\\uint8\\objects\\91_5.png')
+        self.mask_folderi = Path('rs19_val\\uint8\\objects\\91_5i.png') # inverted
 
         self.image_list = np.array(Path(self.image_folder))
         self.mask_list = np.array(Path(self.mask_folder))
+        self.mask_listi = np.array(Path(self.mask_folderi))
 
         if subset == 'Train':
             self.image_names = [self.image_list]*128
-            self.mask_names = [self.mask_list]*128
+            self.mask_names = [self.mask_list]*64 + [self.mask_listi]*64 # +inverted
         elif subset == 'Test':
             self.image_names = [self.image_list]*16
-            self.mask_names = [self.mask_list]*16
+            self.mask_names = [self.mask_list]*8 + [self.mask_listi]*8 # +inverted
 
     def __len__(self) -> int:
         return len(self.image_names)

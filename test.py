@@ -22,7 +22,7 @@ with open('rs19_val\jpgs\\rs19_val\\rs00091.jpg', "rb") as image_file, open('rs1
 
     image = image.unsqueeze(0)
 
-    model = torch.load('models\\model_10_0.001_adam_1outt')
+    model = torch.load('models\\model_30_0.001_adam_1out')
     model, image = model.cpu(), image.cpu()
     model.eval()
     output = model(image)
