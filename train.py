@@ -13,7 +13,7 @@ from dataloader import CustomDataset
 
 #torch.set_num_threads(6)
 
-def wandb_init(num_epochs, lr, batch_size):
+def wandb_init(num_epochs, lr, batch_size, outputs, optimizer):
     wandb.init(
         project="DP_train",
         #name=f"experiment_{run}",
@@ -21,6 +21,8 @@ def wandb_init(num_epochs, lr, batch_size):
         "learning_rate": lr,
         "batch_size": batch_size,
         "epochs": num_epochs,
+        "outputs": outputs,
+        "optimizer": optimizer,
         }
     )
 
@@ -109,16 +111,17 @@ def train(model, num_epochs, batch_size, optimizer, criterion):
     return final_model, model
     
 if __name__ == "__main__":
-    epochs = 3
-    lr = 0.03
+    epochs = 20
+    lr = 0.1
     batch_size = 2
-    wandb_init(epochs, lr, batch_size)
-
-    model = create_model(21)
-    loss_function = nn.CrossEntropyLoss()
+    outputs = 21
+    model = create_model(outputs)
     #optimizer = Adadelta(model.parameters(), lr = lr)
-    #optimizer = Adam(model.parameters(), lr = lr)
     optimizer = SGD(model.parameters(), lr = lr)
+    loss_function = nn.CrossEntropyLoss()
+
+    wandb_init(epochs, lr, batch_size, outputs, str(optimizer.__class__))
+
     model_final, best_model = train(model, epochs, batch_size, optimizer, loss_function)
 
     torch.save(model_final, os.path.join(PATH_MODELS,'model_{}_{}'.format(epochs, lr)))
