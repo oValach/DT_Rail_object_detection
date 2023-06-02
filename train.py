@@ -112,7 +112,7 @@ def train(model, num_epochs, batch_size, optimizer, criterion):
     
 if __name__ == "__main__":
     epochs = 100
-    lr = 0.1
+    lr = 0.05
     batch_size = 2
     outputs = 2
     model = create_model(outputs)
