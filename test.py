@@ -15,7 +15,7 @@ with open('rs19_val\jpgs\\rs19_val\\rs00005.jpg', "rb") as image_file:
     image = torch.from_numpy(np.array(image) / 255).view(3,224,224).float()
     image = image.unsqueeze(0)
 
-    model = torch.load('models\\model_20_0.1') # model_20_0.01-ok model_80_0.01 model_30_0.01-top model_10_0.1? model_40_0.01
+    model = torch.load('models\\modelb_100_0.1') # model_20_0.01-ok model_80_0.01 model_30_0.01-top model_10_0.1? model_40_0.01
     model, image = model.cpu(), image.cpu()
     model.eval()
     output = model(image)

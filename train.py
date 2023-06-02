@@ -111,10 +111,10 @@ def train(model, num_epochs, batch_size, optimizer, criterion):
     return final_model, model
     
 if __name__ == "__main__":
-    epochs = 20
+    epochs = 100
     lr = 0.1
     batch_size = 2
-    outputs = 21
+    outputs = 2
     model = create_model(outputs)
     #optimizer = Adadelta(model.parameters(), lr = lr)
     optimizer = SGD(model.parameters(), lr = lr)
