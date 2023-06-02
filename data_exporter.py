@@ -34,6 +34,7 @@ PATH_UINT = "rs19_val/uint8/rs19_val"
 PATH_CONFIG = "rs19_val/rs19-config.json"
 PATH_JPGS = "rs19_val/jpgs/rs19_val"
 PATH_MASKS = "rs19_val/masks"
+PATH_OBJECTS = "rs19_val/masks/rails"
 
 def get_color_map(cur_dir):
     im_id_map = cv2.imread(cur_dir,cv2.IMREAD_GRAYSCALE) #get semantic label map
@@ -59,12 +60,13 @@ def export_segmented_labels(file_idx):
     filtered_indices = np.where(distances[np.arange(distances.shape[0]), lowest_distances_indices] == 0, lowest_distances_indices, -1)
     filtered_indices = filtered_indices.reshape(1080, 1920)
     
-    np.savez_compressed(os.path.join(PATH_MASKS,str(i)+'.npz'), filtered_indices)
+    #np.savez_compressed(os.path.join(PATH_MASKS,str(i)+'.npz'), filtered_indices)
 
-    #for label_idx in range(21):
-    #    filtered_indicess = filtered_indices == label_idx
-    #    filtered_label = np.where(filtered_indicess, 0, 254).astype(np.uint8)
-    #    imageio.imwrite(os.path.join(PATH_OBJECTS,str(label_idx),str(file_idx)+'.png'), filtered_label)
+    for label_idx in range(21):
+        if label_idx == 5:
+            filtered_indicess = filtered_indices == label_idx
+            filtered_label = np.where(filtered_indicess, 0, 254).astype(np.uint8)
+            imageio.imwrite(os.path.join(PATH_OBJECTS,str(file_idx)+'.png'), filtered_label)
 
     #jpg_path = file_path.replace('uint8', 'jpgs')
     #jpg_path = jpg_path.replace('png', 'jpg')
@@ -80,7 +82,9 @@ def get_label(label_keys, channel_index):
 if __name__ == "__main__":
     #loaded_data = np.load(os.path.join(PATH_MASKS,str(0)+'.npz'))['arr_0'] #ulozeno v arr_*cislo masky*.npz
     for i in range(8500):
-        if os.path.exists(os.path.join(PATH_MASKS,str(i)+'.npz')):
+        print(i)
+        path = os.path.join(PATH_OBJECTS,str(i)+'.png')
+        if os.path.exists(os.path.join(PATH_OBJECTS,str(i)+'.png')):
             continue
         if i == 4337: # corrupted file
             continue

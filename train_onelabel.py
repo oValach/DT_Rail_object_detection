@@ -11,7 +11,6 @@ from torch.utils.data import DataLoader
 
 torch.set_num_threads(6)
 
-PATH_MASKS = "rs19_val/masks"
 PATH_MODELS = 'models'
 
 def create_model(output_channels=1):
@@ -47,15 +46,17 @@ def train(model, num_epochs, optimizer, criterion):
             for inputs, masks in tqdm(dataloader):
                 
                 # load 1 data sample
-                if device.type == 'cuda':
-                    inputs, masks = inputs.cuda(), masks.cuda()
-                else:
+                if device == 'cpu':
                     inputs, masks = inputs.cpu(), masks.cpu()
+                else:
+                    inputs, masks = inputs.cuda(), masks.cuda()
+
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
 
                 outputs = model(inputs)
+
                 loss = criterion(outputs['out'], masks)
 
                 if phase == 'Train':
@@ -82,9 +83,10 @@ def train(model, num_epochs, optimizer, criterion):
     return model
     
 if __name__ == "__main__":
-    model = create_model(2)
-    epochs = 10
-    lr = 0.01
+    outputs = 2
+    epochs = 5
+    lr = 0.1
+    model = create_model(outputs)
 
     loss_function = nn.CrossEntropyLoss()
     #optimizer = Adadelta(model.parameters(), lr = lr)

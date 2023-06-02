@@ -2,7 +2,7 @@
 /geckodriver.log
 /__pycache__
 rs19_val/
-models/
+wandb/
 .env
 .venv
 env/
@@ -10,7 +10,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-wandb/
+
 # pyenv
 .python-version
 

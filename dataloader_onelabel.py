@@ -1,7 +1,7 @@
 from pathlib import Path
 from torchvision.datasets.vision import VisionDataset
 from torchvision.transforms.functional import pil_to_tensor, to_tensor
-from PIL import Image
+from PIL import Image, ImageOps
 import numpy as np
 import torch
 
@@ -17,10 +17,10 @@ class CustomDataset(VisionDataset):
 
         if subset == 'Train':
             self.image_names = [self.image_list]*128
-            self.mask_names = [self.mask_list]*64 + [self.mask_listi]*64 # +inverted
+            self.mask_names = [self.mask_list]*128
         elif subset == 'Test':
             self.image_names = [self.image_list]*16
-            self.mask_names = [self.mask_list]*8 + [self.mask_listi]*8 # +inverted
+            self.mask_names = [self.mask_list]*16
 
     def __len__(self) -> int:
         return len(self.image_names)
@@ -37,9 +37,9 @@ class CustomDataset(VisionDataset):
             image = image.resize((224, 224), Image.BILINEAR)
             mask = mask.resize((224, 224), Image.BILINEAR)
 
-            image = pil_to_tensor(image).float()
+            image = torch.from_numpy(np.array(image) / 255).float()
             mask = pil_to_tensor(mask).float()
-            mask_norm = torch.squeeze(mask / 254).long()
+            mask_norm = torch.squeeze(mask / 255).long()
 
             sample = [image, mask_norm]
             return sample

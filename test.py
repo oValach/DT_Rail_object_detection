@@ -12,7 +12,7 @@ with open('rs19_val\jpgs\\rs19_val\\rs00091.jpg', "rb") as image_file, open('rs1
     image = Image.open(image_file)
     mask = Image.open(mask_file)
     mask = mask.convert("L")
-                
+    
     image = image.resize((224, 224), Image.BILINEAR)
     mask = mask.resize((224, 224), Image.BILINEAR)
 
@@ -22,11 +22,14 @@ with open('rs19_val\jpgs\\rs19_val\\rs00091.jpg', "rb") as image_file, open('rs1
 
     image = image.unsqueeze(0)
 
-    model = torch.load('models\\model_30_0.001_adam_1out')
+    model = torch.load('models\\modelb_3_0.03') # model_20_0.01-ok model_80_0.01 model_30_0.01-top model_10_0.1? model_40_0.01
     model, image = model.cpu(), image.cpu()
     model.eval()
     output = model(image)
     output = output['out'].detach().numpy()
+
+    plt.imshow(mask_norm, cmap='gray')
+    plt.show()
 
 for o in range(21):
     plt.imshow(output[0][o], cmap='gray')
