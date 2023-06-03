@@ -32,10 +32,12 @@ if not LIGHT:
     PATH_JPGS = "rs19_val/jpgs/rs19_val"
     PATH_MASKS = "rs19_val/masks/rails" #rails
     PATH_MODELS = "models"
+    PATH_LOGS = "logs"
 else:
     PATH_JPGS = "rs19_val_light/jpgs/rs19_val"
     PATH_MASKS = "rs19_val_light/masks"
     PATH_MODELS = "models"
+    PATH_LOGS = "logs"
 
 def create_model(output_channels=1):
     model = models.segmentation.deeplabv3_resnet50(weight=True, progress=True)
