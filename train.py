@@ -26,11 +26,11 @@ def wandb_init(num_epochs, lr, batch_size, outputs, optimizer):
         }
     )
 
-LIGHT = True
+LIGHT = False
 
 if not LIGHT:
     PATH_JPGS = "rs19_val/jpgs/rs19_val"
-    PATH_MASKS = "rs19_val/masks"
+    PATH_MASKS = "rs19_val/masks/rails" #rails
     PATH_MODELS = "models"
 else:
     PATH_JPGS = "rs19_val_light/jpgs/rs19_val"
@@ -66,7 +66,7 @@ def train(model, num_epochs, batch_size, optimizer, criterion):
 
             # Iterate over data
             dataset = CustomDataset(PATH_JPGS, PATH_MASKS, seed = True, subset = phase, test_val_fraction = 0.1)
-            dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
+            dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, drop_last=True)
             for inputs, masks in tqdm(dataloader):
 
                 if device == 'cpu':
@@ -111,9 +111,9 @@ def train(model, num_epochs, batch_size, optimizer, criterion):
     return final_model, model
     
 if __name__ == "__main__":
-    epochs = 100
-    lr = 0.05
-    batch_size = 2
+    epochs = 10
+    lr = 0.01
+    batch_size = 4
     outputs = 2
     model = create_model(outputs)
     #optimizer = Adadelta(model.parameters(), lr = lr)

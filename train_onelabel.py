@@ -42,7 +42,7 @@ def train(model, num_epochs, optimizer, criterion):
 
             # Iterate over data
             dataset = CustomDataset(subset = phase)
-            dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
+            dataloader = DataLoader(dataset, batch_size=4, shuffle=True, drop_last=True)
             for inputs, masks in tqdm(dataloader):
                 
                 # load 1 data sample

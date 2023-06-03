@@ -66,7 +66,7 @@ def export_segmented_labels(file_idx):
         if label_idx == 5:
             filtered_indicess = filtered_indices == label_idx
             filtered_label = np.where(filtered_indicess, 0, 254).astype(np.uint8)
-            imageio.imwrite(os.path.join(PATH_OBJECTS,str(file_idx)+'.png'), filtered_label)
+            imageio.imwrite(os.path.join(PATH_OBJECTS,'rs0'+str(file_idx)+'.png'), filtered_label)
 
     #jpg_path = file_path.replace('uint8', 'jpgs')
     #jpg_path = jpg_path.replace('png', 'jpg')
@@ -83,8 +83,8 @@ if __name__ == "__main__":
     #loaded_data = np.load(os.path.join(PATH_MASKS,str(0)+'.npz'))['arr_0'] #ulozeno v arr_*cislo masky*.npz
     for i in range(8500):
         print(i)
-        path = os.path.join(PATH_OBJECTS,str(i)+'.png')
-        if os.path.exists(os.path.join(PATH_OBJECTS,str(i)+'.png')):
+        path = os.path.join(PATH_OBJECTS,'rs0',str(i)+'.png')
+        if os.path.exists(os.path.join(PATH_OBJECTS,'rs0',str(i)+'.png')):
             continue
         if i == 4337: # corrupted file
             continue

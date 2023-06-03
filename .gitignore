@@ -10,7 +10,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-models/
+
 # pyenv
 .python-version
 

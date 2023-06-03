@@ -1,7 +1,7 @@
 from pathlib import Path
 from torchvision.datasets.vision import VisionDataset
 from torchvision.transforms.functional import pil_to_tensor, to_tensor
-from PIL import Image, ImageOps
+from PIL import Image
 import numpy as np
 import torch
 
@@ -37,9 +37,10 @@ class CustomDataset(VisionDataset):
             image = image.resize((224, 224), Image.BILINEAR)
             mask = mask.resize((224, 224), Image.BILINEAR)
 
-            image = torch.from_numpy(np.array(image) / 255).float()
-            mask = pil_to_tensor(mask).float()
-            mask_norm = torch.squeeze(mask / 255).long()
+            #normalize
+            image = torch.div(pil_to_tensor(image).float(), 254)
+            mask_norm = torch.div(pil_to_tensor(mask).float(), 254)
+            mask = torch.squeeze(mask_norm).long()
 
-            sample = [image, mask_norm]
+            sample = [image, mask]
             return sample
