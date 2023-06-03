@@ -15,7 +15,6 @@ class CustomDataset(VisionDataset):
         # all files
         self.image_list = np.array(sorted(Path(self.image_folder).glob("*")))
         self.mask_list = np.array(sorted(Path(self.mask_folder).glob("*")))
-        self.mask_list = np.array(sorted(self.mask_list, key=lambda path: int(re.findall(r'\d+', path.stem)[0])))
 
         for file_path in self.image_list:
             if 'desktop.ini' in file_path.name:
@@ -24,6 +23,8 @@ class CustomDataset(VisionDataset):
             if 'desktop.ini' in file_path.name:
                 file_path.unlink()
 
+        self.mask_list = np.array(sorted(self.mask_list, key=lambda path: int(re.findall(r'\d+', path.stem)[0])))
+        
         if seed: #rng locked data shuffle and split
             np.random.seed(seed)
             indices = np.arange(len(self.image_list[0:20]))

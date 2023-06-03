@@ -1,6 +1,0 @@
-Epoch 0: Train Loss: 0.3803
-Epoch 0: Test Loss: 2.5794
-Epoch 1: Train Loss: 0.1198
-Epoch 1: Test Loss: 2.0632
-Epoch 2: Train Loss: 0.0683
-Epoch 2: Test Loss: 1.6019
