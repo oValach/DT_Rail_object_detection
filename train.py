@@ -92,7 +92,7 @@ def train(model, num_epochs, batch_size, optimizer, criterion):
             if phase == 'Train': wandb.log({"train_loss": epoch_loss})
             if phase == 'Test': wandb.log({"test_loss": epoch_loss})
 
-            with open(os.path.join(PATH_MODELS, 'log_{}_{}.txt'.format(num_epochs, lr)), 'a') as log_file:
+            with open(os.path.join(PATH_LOGS, 'log_{}_{}.txt'.format(num_epochs, lr)), 'a') as log_file:
                 log_file.write('Epoch {}: {} Loss: {:.4f}\n'.format(epoch, phase, epoch_loss))
 
             # save better model
