@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
-with open('D:\Work\DP\models//log_30_0.02.txt', 'r') as f:
+with open('D:\Work\DP\DT_Rail_object_detection\models//log_300_0.1_adadelta.txt', 'r') as f:
     lines = f.readlines()
     lines = [line.strip() for line in lines]
     values = []
@@ -16,7 +17,7 @@ for i,value in enumerate(values):
     else:
         test_data.append(float(value))
 
-x = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]
+x = np.arange(0,len(lines)/2)
 
 plt.style.use('bmh')
 plt.plot(x, train_data)
